@@ -21,4 +21,9 @@ class Project extends Model
     {
         return $this->hasMany('App\Models\Task', 'project_id');
     }
+
+    public function description()
+    {
+        return $this->description ?? '';
+    }
 }

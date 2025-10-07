@@ -3,15 +3,12 @@
 namespace App\Http\Resources\Project;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Traits\HasWithResponse;
 
 class ProjectCollection extends ResourceCollection
 {
-    /**
-     * Transform the resource collection into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
+    use HasWithResponse;
+
     public function toArray($request)
     {
         return parent::toArray($request);

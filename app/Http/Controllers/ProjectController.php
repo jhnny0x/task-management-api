@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\Project\ProjectRepositoryInterface as Project;
 use App\Http\Requests\Project\{ StoreProjectRequest, UpdateProjectRequest };
+use App\Http\Resources\Project\{ ProjectCollection, ProjectResource };
 
 class ProjectController extends Controller
 {
@@ -17,7 +18,9 @@ class ProjectController extends Controller
     public function index()
     {
         $user_id = auth()->user()->id;
-        return $this->project->where('user_id', $user_id)->get();
+        $projects = $this->project->where('user_id', $user_id)->get();
+
+        return new ProjectCollection($projects);
     }
 
     public function store(StoreProjectRequest $request)
@@ -31,7 +34,9 @@ class ProjectController extends Controller
     public function show(int $id)
     {
         $user_id = auth()->user()->id;
-        return $this->project->where('user_id', $user_id)->find($id);
+        $project = $this->project->where('user_id', $user_id)->find($id);
+
+        return new ProjectResource($project);
     }
 
     public function update(UpdateProjectRequest $request, int $id)

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Repositories\Task\TaskRepositoryInterface as Task;
 use App\Http\Requests\Task\{ StoreTaskRequest, UpdateTaskRequest };
+use App\Http\Resources\Task\{ TaskCollection, TaskResource };
 
 class TaskController extends Controller
 {
@@ -20,7 +21,7 @@ class TaskController extends Controller
         $user_id = auth()->user()->id;
         $tasks = $this->task->where('user_id', $user_id)->get();
 
-        return $tasks;
+        return new TaskCollection($tasks);
     }
 
     public function store(StoreTaskRequest $request)
@@ -34,9 +35,11 @@ class TaskController extends Controller
     public function show(int $id)
     {
         $user_id = auth()->user()->id;
-        $task = $this->task->where('user_id', $user_id)->find($id);
+        $task = $this->task->with(['project', 'tags'])
+            ->where('user_id', $user_id)
+            ->find($id);
 
-        return $task;
+        return new TaskResource($task);
     }
 
     public function update(UpdateTaskRequest $request, int $id)

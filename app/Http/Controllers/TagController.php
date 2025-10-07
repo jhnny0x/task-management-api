@@ -3,24 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\Tag\TagRepositoryInterface as Tag;
-use App\Repositories\Task\TaskRepositoryInterface as Task;
 use App\Http\Requests\Tag\{ StoreTagRequest, UpdateTagRequest };
+use App\Http\Resources\Tag\{ TagResource, TagCollection };
 
 class TagController extends Controller
 {
     private $tag;
-    private $task;
 
-    function __construct(Tag $tag, Task $task)
+    function __construct(Tag $tag)
     {
         $this->tag = $tag;
-        $this->task = $task;
     }
 
     public function index()
     {
         $user_id = auth()->user()->id;
-        return Tag::where('user_id', $user_id)->get();
+        $tags = $this->tag->where('user_id', $user_id)->get();
+
+        return new TagCollection($tags);
     }
 
     public function store(StoreTagRequest $request)
@@ -34,7 +34,9 @@ class TagController extends Controller
     public function show(int $id)
     {
         $user_id = auth()->user()->id;
-        return Tag::where('user_id', $user_id)->find($id);
+        $tag = $this->tag->where('user_id', $user_id)->find($id);
+
+        return new TagResource($tag);
     }
 
     public function update(UpdateTagRequest $request, int $id)

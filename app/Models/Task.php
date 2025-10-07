@@ -27,4 +27,14 @@ class Task extends Model
     {
         return $this->belongsToMany('App\Models\Tag', 'task_tags', 'task_id', 'tag_id');
     }
+
+    public function date()
+    {
+        return $this->date ?? '';
+    }
+
+    public function description()
+    {
+        return $this->description ?? '';
+    }
 }
